@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 public class MenuUIHandler : MonoBehaviour
 {
      public ColorPicker ColorPicker;
+     public static Color SelectedColor;
      public void StartGame()
     {
         SceneManager.LoadScene(1);
@@ -19,6 +20,14 @@ public class MenuUIHandler : MonoBehaviour
     public void NewColorSelected(Color color)
     {
         // add code here to handle when a color is selected
+        ColorPicker.CurrentColor = color;
+        SelectedColor = color;
+
+        // save the color, so it stays on the computer even after the game is closed
+        PlayerPrefs.SetFloat("SavedColorR", color.r);
+        PlayerPrefs.SetFloat("SavedColorG", color.g);
+        PlayerPrefs.SetFloat("SavedColorB", color.b);
+        PlayerPrefs.Save();
     }
     
     private void Start()
@@ -26,6 +35,16 @@ public class MenuUIHandler : MonoBehaviour
         ColorPicker.Init();
         //this will call the NewColorSelected function when the color picker have a color button clicked.
         ColorPicker.onColorChanged += NewColorSelected;
+
+        // load the saved color, if it exists
+        if (PlayerPrefs.HasKey("SavedColorR"))
+        {
+            float r = PlayerPrefs.GetFloat("SavedColorR");
+            float g = PlayerPrefs.GetFloat("SavedColorG");
+            float b = PlayerPrefs.GetFloat("SavedColorB");
+            Color savedColor = new Color(r, g, b);
+            ColorPicker.SelectColor(savedColor);
+        }
     }
 
     public void ExitGame()

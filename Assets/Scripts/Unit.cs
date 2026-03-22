@@ -26,7 +26,11 @@ public abstract class Unit : MonoBehaviour,
 
     private void Start()
     {
-
+        // check if we actually picked a color in the menu
+        if (MenuUIHandler.SelectedColor != Color.clear)
+        {
+            SetColor(MenuUIHandler.SelectedColor);
+        }
     }
 
     void SetColor(Color c)
